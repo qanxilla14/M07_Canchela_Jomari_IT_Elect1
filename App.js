@@ -1,24 +1,183 @@
-import React from 'react';
-import { SafeAreaView, ScrollView, Text, StyleSheet } from 'react-native';
-import CounterApp from './CounterApp';
-import ColorChangerApp from './ColorChangerApp';
+import React, { useState } from "react";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
 
 export default function App() {
-  return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Counter App</Text>
-        <CounterApp />
+  const [messages, setMessages] = useState([
+    { id: "1", text: " ", sender: "other" },
+    { id: "2", text: "", sender: "me" },
+  ]);
+  const [comments, setComments] = useState([]);
+  const [input, setInput] = useState("");
+  const [commentInput, setCommentInput] = useState("");
 
-        <Text style={styles.title}>Color Changer App</Text>
-        <ColorChangerApp />
-      </ScrollView>
+  const sendMessage = () => {
+    if (input.trim() === "") return;
+
+    const newMessage = {
+      id: Date.now().toString(),
+      text: input,
+      sender: "me",
+    };
+    setMessages((prev) => [...prev, newMessage]);
+    setInput("");
+
+    // Auto reply
+    setTimeout(() => {
+      const botReply = {
+        id: (Date.now() + 1).toString(),
+        text: "",
+        sender: "other",
+      };
+      setMessages((prev) => [...prev, botReply]);
+    }, 1000);
+  };
+
+  const addComment = () => {
+    if (commentInput.trim() === "") return;
+
+    const newComment = {
+      id: Date.now().toString(),
+      text: commentInput,
+    };
+    setComments((prev) => [...prev, newComment]);
+    setCommentInput("");
+  };
+
+  const renderMessage = ({ item }) => (
+    <View
+      style={{
+        alignSelf: item.sender === "me" ? "flex-end" : "flex-start",
+        backgroundColor: item.sender === "me" ? "#0084ff" : "#e5e5ea",
+        borderRadius: 20,
+        margin: 5,
+        padding: 10,
+        maxWidth: "70%",
+      }}
+    >
+      <Text style={{ color: item.sender === "me" ? "white" : "red" }}>
+        {item.text}
+      </Text>
+    </View>
+  );
+
+  const renderComment = ({ item }) => (
+    <View
+      style={{
+        backgroundColor: "#f0f0f0",
+        borderRadius: 10,
+        padding: 10,
+        marginVertical: 4,
+      }}
+    >
+      <Text style={{ color: "#333" }}> {item.text}</Text>
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#f2f2f2" }}>
+      {/* CHAT BOX */}
+      
+      <Text style={{ fontSize: 30, fontWeight: "bold", margin: 10  }}>
+        Chat Box
+      </Text>
+      <FlatList
+        data={messages}
+        keyExtractor={(item) => item.id}
+        renderItem={renderMessage}
+        contentContainerStyle={{ padding: 10 }}
+      />
+
+      {/* Chat Input */}
+      <View
+        style={{
+          flexDirection: "row",
+          padding: 10,
+          borderTopWidth: 1,
+          borderColor: "#ccc",
+          backgroundColor: "#fff",
+        }}
+      >
+        <TextInput
+          style={{
+            flex: 1,
+            borderWidth: 1,
+            borderColor: "#ccc",
+            borderRadius: 20,
+            paddingHorizontal: 15,
+            marginRight: 10,
+          }}
+          placeholder="Type a message..."
+          value={input}
+          onChangeText={setInput}
+        />
+        <TouchableOpacity
+          onPress={sendMessage}
+          style={{
+            backgroundColor: "blue",
+            borderRadius: 20,
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ color: "Green", fontWeight: "bold", fontSize:  30,}}>Send</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* COMMENT SECTION */}
+      <Text style={{ fontSize: 30, fontWeight: "bold", margin: 10 }}>
+        Comments
+      </Text>
+      <FlatList
+        data={comments}
+        keyExtractor={(item) => item.id}
+        renderItem={renderComment}
+        contentContainerStyle={{ padding: 10 }}
+      />
+
+      {/* Comment Input */}
+      <View
+        style={{
+          flexDirection: "row",
+          padding: 10,
+          borderTopWidth: 1,
+          borderColor: "#ccc",
+          backgroundColor: "#fff",
+        }}
+      >
+        <TextInput
+          style={{
+            flex: 1,
+            borderWidth: 1,
+            borderColor: "#ccc",
+            borderRadius: 20,
+            paddingHorizontal: 15,
+            marginRight: 10,
+          }}
+          placeholder="Write a comment..."
+          value={commentInput}
+          onChangeText={setCommentInput}
+        />
+        <TouchableOpacity
+          onPress={addComment}
+          style={{
+            backgroundColor: "yellow",
+            borderRadius: 50,
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ color: "black", fontWeight: "bold", fontSize:  20, }}>Sent</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safe: { flex: 1 },
-  container: { padding: 20 },
-  title: { fontSize: 50, fontWeight: 'bold', marginVertical: 20 }
-});
