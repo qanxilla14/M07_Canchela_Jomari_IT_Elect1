@@ -2,7 +2,7 @@
 import React,{useState} from "react";
 import {SafeAreaView,StyleSheet,Button,View
 } from 'react-native';
-import ChatScreen from "./ChatScreen.js";
+import ChatBox from "./ChatBox.js";
 import CommentInput from "./CommentInput.js";
 export default function App() {
   const [ page,setPage]=useState("chat");
@@ -10,7 +10,7 @@ export default function App() {
 
   return (
  <SafeAreaView style={styles.container}>
- {page === "chat" &&<ChatScreen/>}
+ {page === "chat" &&<ChatBox/>}
  {page === "comment"&&<CommentInput/>}
   <View style={styles.buttons}>
   <Button title="Go to Chat"
