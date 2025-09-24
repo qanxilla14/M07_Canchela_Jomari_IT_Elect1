@@ -1,35 +1,19 @@
-// CounterApp.js
-import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
 
-export default function CounterApp() {
-  const [count, setCount] = useState(0);
+import {View,Text,StyleSheet} from 'react-native';
+import CounterApp from './CounterApp.js';
+export default function App() {
+  
 
+  
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Counter App</Text>
-      <Text style={styles.counter}>{count}</Text>
-      <Button title="Increment" onPress={() => setCount(count + 1)} />
-      <View style={{ marginVertical: 5 }} />
-      <Button title="Decrement" onPress={() => setCount(count - 1)} />
-    </View>
-  );
+   <View style={styles.container}>
+   <CounterApp/>
+   </View>
+   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  counter: {
-    fontSize: 36,
-    marginBottom: 20,
-  },
+  container:{
+    flex:1
+  }
 });
